@@ -1,0 +1,13 @@
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Release\PayooEDCConnectivity.dll
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Release\PayooEDCConnectivity.pdb
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Release\PayooEDCConnectivity.dll
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Release\PayooEDCConnectivity.pdb
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Release\PayooEDCConnectivity.csprojResolveAssemblyReference.cache
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Release\PayooEDCConnectivity.dll
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Release\PayooEDCConnectivity.pdb
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Release\PayooEDCConnectivity.dll
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Release\PayooEDCConnectivity.pdb
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Release\PayooEDCConnectivity.tlb
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Release\PayooEDCConnectivity.csprojResolveAssemblyReference.cache
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Release\Newtonsoft.Json.dll
+E:\Working\Payoo\Projects\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Release\Newtonsoft.Json.xml

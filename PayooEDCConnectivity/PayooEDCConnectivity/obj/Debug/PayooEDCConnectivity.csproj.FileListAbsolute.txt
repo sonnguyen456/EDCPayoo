@@ -1,0 +1,6 @@
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Debug\PayooEDCConnectivity.dll
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Debug\PayooEDCConnectivity.pdb
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Debug\Newtonsoft.Json.dll
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\bin\Debug\Newtonsoft.Json.xml
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Debug\PayooEDCConnectivity.dll
+E:\Working\1Ship\Project\PayooEDCConnectivity\PayooEDCConnectivity\PayooEDCConnectivity\obj\Debug\PayooEDCConnectivity.pdb
