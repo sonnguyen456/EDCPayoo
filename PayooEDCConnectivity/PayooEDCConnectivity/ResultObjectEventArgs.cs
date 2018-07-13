@@ -10,62 +10,108 @@ namespace PayooEDCConnectivity
     [ClassInterface(ClassInterfaceType.None)]
     public class ResultObjectEventArgs : EventArgs
     {
-        public int responceCode;
-        public string requestId;
-        public int transactionType;
-        public string transactionDate;
-        public double transactionAmount;
-        public int cardType;
-        public string cardNumber;
-        public string serviceCode;
+        /// <summary>
+        /// Response Code
+        /// </summary>
+        /// <value>The res code.</value>
+        public int ResCode { get; set; }
+
+        /// <summary>
+        /// Request Id
+        /// </summary>
+        public string ReId { get; set; }
+
+        /// <summary>
+        /// Response Data
+        /// </summary>
+        /// <value>The res data.</value>
+        public ResponseData ResData { get; set; }
+
+    }
+
+    public class ResponseData 
+    {
+        /// <summary>
+        /// Transaction Type
+        /// </summary>
+        public int TrTy { get; set; }
+
+        /// <summary>
+        /// The transaction date.
+        /// </summary>
+        public string TrDa  { get; set; }
+
+        /// <summary>
+        /// The transaction amount.
+        /// </summary>
+        public double TrAmt { get; set; }
+
+        /// <summary>
+        /// The type of the card.
+        /// </summary>
+        public int CaTy { get; set; }
+        /// <summary>
+        /// The card number.
+        /// </summary>
+        public string CaNum { get; set; }
+
+        /// <summary>
+        /// The service code.
+        /// </summary>
+        public string SeCode { get; set; }
+
         //public int providerCode; //deleted ver4 12/10/2017
-        public string transactionID; //Mã giao dịch Payoo
-        public string deviceID; //Mã máy EDC
-        public string approvalCode; //Mã chuẩn chi từ ngân hàng. Khác NULL nếu CardType != 0
+
+        /// <summary>
+        /// The transaction identifier.
+        /// </summary>
+        public string TrID { get; set; } //Mã giao dịch Payoo
+
+        /// <summary>
+        /// The device identifier. Mã máy EDC
+        /// </summary>
+        public string DeID { get; set; }
+
+        /// <summary>
+        /// The approval code. Mã xác nhận chi từ ngân hàng. Khác NULL nếu CardType != 0
+        /// </summary>
+        public string ApCode { get; set; }
 
         //add ver4 12/10/2017
-        public string providerId;
-        public string serviceId;
-        public string cardValue;
+        /// <summary>
+        /// The provider identifier.
+        /// </summary>
+        public string PrId { get; set; }
+
+        /// <summary>
+        /// The service identifier.
+        /// </summary>
+        public string SeId { get; set; }
+
+        /// <summary>
+        /// The card value.
+        /// </summary>
+        public string CaValue { get; set; }
 
         //add ver5 06/11/2017
-        public string orderNo;
-        public string systemTrace;
-        public string customerCode;
-        public int numOfProduct;
+        /// <summary>
+        /// The order no.
+        /// </summary>
+        public string OrNo { get; set; }
 
-        public ResultObjectEventArgs() { }
+        /// <summary>
+        /// The system trace.
+        /// </summary>
+        public string SysTra { get; set; }
 
-        public ResultObjectEventArgs(int responceCode, string requestId, int transactionType,
-            string transactionDate, double transactionAmount, int cardType, string cardNumber,
-            string serviceCode, string transactionID, string deviceID, string approvalCode,
-            string ProviderId, string ServiceId, string CardValue,
-            string orderNo, string systemTrace, string customerCode, int numOfProduct)
-        {
-            this.responceCode = responceCode;
-            this.requestId = requestId;
-            this.transactionType = transactionType;
-            this.transactionDate = transactionDate;
-            this.transactionAmount = transactionAmount;
-            this.cardType = cardType;
-            this.cardNumber = cardNumber;
-            this.serviceCode = serviceCode;
-            //this.providerCode = providerCode;
-            this.transactionID = transactionID;
-            this.deviceID = deviceID;
-            this.approvalCode = approvalCode;
+        /// <summary>
+        /// The customer code.
+        /// </summary>
+        public string CusCode { get; set; }
 
-            //add ver4 12/10/2017
-            this.providerId = ProviderId;
-            this.serviceId = ServiceId;
-            this.cardValue = CardValue;
-
-            //add ver4 12/10/2017
-            this.orderNo = orderNo;
-            this.systemTrace = systemTrace;
-            this.customerCode = customerCode;
-            this.numOfProduct = numOfProduct;
-        }
-
+        /// <summary>
+        /// The number of product.
+        /// </summary>
+        public int NumPro { get; set; }
     }
 }

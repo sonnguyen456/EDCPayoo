@@ -21,7 +21,7 @@ namespace PayooEDCConnectivity
     [ProgId("PayooEDCConnectivity.EDCConnectivity")]
     public class EDCConnectivity
     {
-        
+
         private string comm = String.Empty;
 
         //Kết nối server
@@ -32,8 +32,6 @@ namespace PayooEDCConnectivity
         //private string tableName = String.Empty;
 
         private SerialPort comPort = null;
-        
-        private string inputData = String.Empty;
 
         //Sau khi nhận được resutl từ thiết bị thì sẽ lưu lại vào biến này.
         private string output = "", outputResult;
@@ -56,7 +54,7 @@ namespace PayooEDCConnectivity
 
         public void connectCOM(String comm)
         {
-            if(comm == null || comm.Trim().Length == 0)
+            if (comm == null || comm.Trim().Length == 0)
                 throw new Exception("Thiếu thông tin COM nhập vào!");
             else
             {
@@ -148,7 +146,7 @@ namespace PayooEDCConnectivity
                 //Đóng kết nối với server nếu xảy ra sự cố kết nối với cổng COM.
                 //if (conn != null && conn.State == ConnectionState.Open)
                 //    conn.Close();
-                
+
                 if (comPort != null && comPort.IsOpen)
                     comPort.Close();
                 throw new Exception("Không thể kết nối với thiết bị", ex);
@@ -161,122 +159,52 @@ namespace PayooEDCConnectivity
         */
         private void portDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            inputData = comPort.ReadExisting();
-            if (inputData != null && inputData != String.Empty)
+            var inputData = comPort.ReadExisting();
+            if (string.IsNullOrEmpty(inputData))
             {
-                if (output == null || output.Length == 0)
-                {
-                    try
-                    {
-                        if (inputData.Trim().StartsWith("{"))
-                        {
-                            outputResult = "";
-                            output += inputData;
-                        }
-                    }
-                    catch { }
-
-                }
-                else
-                {
-                    output += inputData;
-                    outputResult = "";
-                } 
-                receiveData(output);
+                return;
             }
+
+            if (string.IsNullOrEmpty(output))
+            {
+                try
+                {
+                    if (inputData.Trim().StartsWith("{", StringComparison.Ordinal))
+                    {
+                        outputResult = "";
+                        output += inputData;
+                    }
+                }
+                catch { }
+
+            }
+            else
+            {
+                output += inputData;
+                outputResult = "";
+            }
+            receiveData(output);
         }
 
+        /// <summary>
+        /// Receives the data.
+        /// Vì inputData được trả về từ máy EDC theo nhiều lần.
+        /// Nên mỗi lần trả về thì cộng vào chuỗi output,
+        /// và sao đó Parse output đó thành Json Object.
+        /// Nếu parse thành công thì đó là chuỗi kết quả hoàn chỉnh, ta tiến hành insert vào DB.
+        /// </summary>
+        /// <param name="inputData">Input data.</param>
         private void receiveData(String inputData)
         {
-            /*
-            Vì inputData được trả về từ máy EDC theo nhiều lần.
-            Nên mỗi lần trả về thì cộng vào chuỗi output,
-            và sao đó Parse output đó thành Json Object.
-            Nếu parse thành công thì đó là chuỗi kết quả hoàn chỉnh, ta tiến hành insert vào DB.
-            */
             try
             {
                 JObject jObject = IsValidJson(output);
                 if (jObject != null)
                 {
-                    int responceCode = (int)jObject["ResponseCode"];
-
-                    JToken jdata = jObject["ResponseData"];
-
-                    string requestId = (string)jdata["RequestId"];
-                    int transactionType = (int)jdata["TransactionType"];
-                    string transactionDate = (string)jdata["TransactionDate"];
-
-                    double transactionAmount = (double)jdata["TransactionAmount"];
-                    int cardType = (int)jdata["CardType"];
-                    string cardNumber = (string)jdata["CardNumber"];
-                    string serviceCode = (string)jdata["ServiceCode"];
-                    //int providerCode = (int)jdata["ProviderCode"];
-
-                    //Update 30/08/2017
-                    //string MMSID = (string)jdata["MMSID"];
-                    string transactionID = (string)jdata["TransactionID"]; //Mã giao dịch Payoo
-                    string deviceID = (string)jdata["DeviceID"]; //Mã máy EDC
-                    string approvalCode = (string)jdata["ApprovalCode"]; //Mã chuẩn chi từ ngân hàng. Khác NULL nếu CardType != 0
-
-                    //Add ver4
-                    string providerId = null;
                     try
                     {
-                        providerId = (string)jdata["ProviderId"];
-                    }
-                    catch { }
-                    string serviceId = null;
-                    try
-                    {
-                        serviceId = (string)jdata["ServiceId"];
-                    }
-                    catch { }
-
-                    string cardValue = null;
-                    try
-                    {
-                        cardValue = (string)jdata["CardValue"];
-                    }
-                    catch { }
-
-                    //v5 - 06/11/2017
-                    string orderNo = null;
-                    try
-                    {
-                        orderNo = (string)jdata["OrderNo"];
-                    }
-                    catch { }
-                    string systemTrace = null;
-                    try
-                    {
-                        systemTrace = (string)jdata["SystemTrace"];
-                    }
-                    catch { }
-                    string customerCode = null;
-                    try
-                    {
-                        customerCode = (string)jdata["CustomerCode"];
-                    }
-                    catch { }
-                    int numOfProduct = 0;
-                    try
-                    {
-                        numOfProduct = (int)jdata["NumOfProduct"];
-                    }
-                    catch { }
-
-                    try
-                    {
-                        result = new ResultObjectEventArgs(
-                        responceCode, requestId, transactionType, transactionDate, transactionAmount,
-                        cardType, cardNumber, serviceCode, transactionID,
-                        deviceID, approvalCode,
-                        providerId, serviceId, cardValue,//update ver4 12/10/2017
-                        orderNo, systemTrace, customerCode, numOfProduct //update ver5 06/11/2017
-                        );
-                        if (OnReceiveEDCResult != null)
-                            OnReceiveEDCResult(result);
+                        var response = JsonConvert.DeserializeObject<ResultObjectEventArgs>(output);
+                        OnReceiveEDCResult?.Invoke(response);
                     }
                     catch { }
 
@@ -286,10 +214,7 @@ namespace PayooEDCConnectivity
                     outputResult = output;
 
                     output = "";
-                    //if (comPort != null && comPort.IsOpen)
-                    //    comPort.Close();
                 }
-
             }
             catch { }
         }
@@ -305,7 +230,7 @@ namespace PayooEDCConnectivity
         public void createResultFile(String jsonResult)
         {
             //System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + 
-            string path =  @"C:\Result\result.txt";
+            string path = @"C:\Result\result.txt";
             if (!File.Exists(path))
             {
                 File.Create(path);
@@ -355,9 +280,21 @@ namespace PayooEDCConnectivity
             isCompleted = false;
             output = "";
             outputResult = "";
-            string date = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-            string request = "{\"RequestId\":\"" + requestId + "\",\"RequestTime\":\"" + date + "\",\"RequestData\":{\"Price\":" + amount + ",\"TransactionType\":" + Const.TRANSACTION_TYPE + "}}";
-            comPort.Write(request);
+            var reqObject = new PaymentRequest
+            {
+                ReqId = requestId,
+                ReqTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"),
+                Operation = RequestOperation.Sale,
+                ReqData = new RequestObjectData
+                {
+                    Price = amount,
+                    PayMethod = PayMethod.Card,
+                    PayParams = null
+                }
+            };
+
+            string reqString = JsonConvert.SerializeObject(reqObject);
+            comPort.Write(reqString);
         }
 
         public void close()

@@ -61,6 +61,7 @@
     <Compile Include="EDCConnectivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultObjectEventArgs.cs" />
+    <Compile Include="PaymentRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
