@@ -11,8 +11,23 @@ namespace PayooEDCConnectivity
         /// </summary>
         public string ReqId { get; set; }
         public string ReqTime { get; set; }
-        public RequestOperation Operation { get; set; }
+        public RequestOperation Operation => RequestOperation.Sale;
         public RequestObjectData ReqData { get; set; }
+    }
+
+
+    /// <summary>
+    /// Payment request.
+    /// </summary>
+    public class CheckVoucherRequest
+    {
+        /// <summary>
+        /// The request identifier
+        /// </summary>
+        public string ReqId { get; set; }
+        public string ReqTime { get; set; }
+        public RequestOperation Operation => RequestOperation.CheckVoucher;
+        public VoucherPayParams ReqData { get; set; }
     }
 
     public enum RequestOperation {

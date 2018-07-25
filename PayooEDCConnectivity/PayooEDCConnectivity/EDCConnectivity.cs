@@ -284,12 +284,60 @@ namespace PayooEDCConnectivity
             {
                 ReqId = requestId,
                 ReqTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"),
-                Operation = RequestOperation.Sale,
                 ReqData = new RequestObjectData
                 {
                     Price = amount,
                     PayMethod = PayMethod.Card,
                     PayParams = null
+                }
+            };
+
+            string reqString = JsonConvert.SerializeObject(reqObject);
+            comPort.Write(reqString);
+        }
+
+        public void send(String requestId, long amount, string lstVouchers, int voucherProvider)
+        {
+            if (comPort != null && !comPort.IsOpen)
+                comPort.Open();
+            isCompleted = false;
+            output = "";
+            outputResult = "";
+            var reqObject = new PaymentRequest
+            {
+                ReqId = requestId,
+                ReqTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"),
+                ReqData = new RequestObjectData
+                {
+                    Price = amount,
+                    PayMethod = PayMethod.Voucher,
+                    PayParams = new VoucherPayParams
+                    {
+                        LstVoucher = lstVouchers,
+                        VchProv = voucherProvider
+                    }
+                }
+            };
+
+            string reqString = JsonConvert.SerializeObject(reqObject);
+            comPort.Write(reqString);
+        }
+
+        public void checkVoucher(String requestId, string lstVouchers, int voucherProvider)
+        {
+            if (comPort != null && !comPort.IsOpen)
+                comPort.Open();
+            isCompleted = false;
+            output = "";
+            outputResult = "";
+            var reqObject = new CheckVoucherRequest
+            {
+                ReqId = requestId,
+                ReqTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"),
+                ReqData = new VoucherPayParams
+                {
+                    LstVoucher= lstVouchers,
+                    VchProv = voucherProvider
                 }
             };
 
