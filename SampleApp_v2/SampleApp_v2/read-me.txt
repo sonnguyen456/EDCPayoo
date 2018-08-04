@@ -1,0 +1,8 @@
+I. Sử dụng máy POS.
+- Mở máy POS lên, khi hiện màn hình cảnh báo nhấn Cancel để vào App.
+- Chọn chức năng 1. để chờ nhận số tiền. Sau khi bật, POS sẽ chờ đến khi nhận được kết quả.
+- chọn chức năng 2. để gửi kết quả. POS sẽ gửi dữ liệu ngay lập tức.
+
+II. Hướng dẫn sử dụng App Window.
+- Có hướng dẫn chi tiết khi chạy app.
+- Lưu ý với chức nắng số 1. Cần chọn chức năng số 1. trên POS trước.
