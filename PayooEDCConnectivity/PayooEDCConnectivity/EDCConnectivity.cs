@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO.Ports;
-using System.Data.SqlClient;
-using System.Data;
-using System.Collections;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
-using System.Reflection;
 using System.IO;
-using static System.Net.Mime.MediaTypeNames;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
@@ -273,30 +264,39 @@ namespace PayooEDCConnectivity
             }
         }
 
-        public void send(String requestId, long amount)
+        /// <summary>
+        /// Sends payment request to comm.
+        /// </summary>
+        /// <returns>The to comm.</returns>
+        /// <param name="commName">Comm name.</param>
+        /// <param name="requestId">Request identifier.</param>
+        /// <param name="amount">Amount.</param>
+        /// <param name="lstVouchers">Lst vouchers.</param>
+        /// <param name="voucherProvider">Voucher provider.</param>
+        public string sendToComm(string commName, string requestId, long amount, string lstVouchers = null, int voucherProvider = 0)
         {
-            if (comPort != null && !comPort.IsOpen)
-                comPort.Open();
-            isCompleted = false;
-            output = "";
-            outputResult = "";
-            var reqObject = new PaymentRequest
+            var Serial = new SerialHelper(commName, 9600);
+
+            var responseData = Serial.SendAndRecieveData<ResponsePayment>(new PaymentRequest()
             {
                 ReqId = requestId,
                 ReqTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"),
                 ReqData = new RequestObjectData
                 {
                     Price = amount,
-                    PayMethod = PayMethod.Card,
-                    PayParams = null
+                    PayMethod = PayMethod.Voucher,
+                    PayParams = string.IsNullOrEmpty(lstVouchers) ? null : new VoucherPayParams
+                    {
+                        LstVoucher = lstVouchers,
+                        VchProv = voucherProvider
+                    }
                 }
-            };
+            });
 
-            string reqString = JsonConvert.SerializeObject(reqObject);
-            comPort.Write(reqString);
+            return JsonConvert.SerializeObject(responseData);
         }
 
-        public void send(String requestId, long amount, string lstVouchers, int voucherProvider)
+        public void send(String requestId, long amount, string lstVouchers = null, int voucherProvider = 0)
         {
             if (comPort != null && !comPort.IsOpen)
                 comPort.Open();
@@ -311,7 +311,7 @@ namespace PayooEDCConnectivity
                 {
                     Price = amount,
                     PayMethod = PayMethod.Voucher,
-                    PayParams = new VoucherPayParams
+                    PayParams = string.IsNullOrEmpty(lstVouchers) ? null : new VoucherPayParams
                     {
                         LstVoucher = lstVouchers,
                         VchProv = voucherProvider
@@ -319,30 +319,35 @@ namespace PayooEDCConnectivity
                 }
             };
 
-            string reqString = JsonConvert.SerializeObject(reqObject);
-            comPort.Write(reqString);
+            string json = JsonConvert.SerializeObject(reqObject, Formatting.None);
+            var sendData = String.Format("00000000^{0}~@^{1}~@^{1}~@^{0}~00000000", ChecksumHelper.Hash(json), json);
+            comPort.Write(sendData);
         }
 
-        public void checkVoucher(String requestId, string lstVouchers, int voucherProvider)
+        /// <summary>
+        /// Checks the vouchers.
+        /// </summary>
+        /// <returns>The vouchers.</returns>
+        /// <param name="commName">Comm portname.</param>
+        /// <param name="requestId">Request identifier.</param>
+        /// <param name="lstVouchers">List vouchers to be checked.</param>
+        /// <param name="voucherProvider">Voucher provider.</param>
+        public string checkVouchers(string commName, string requestId, string lstVouchers, int voucherProvider)
         {
-            if (comPort != null && !comPort.IsOpen)
-                comPort.Open();
-            isCompleted = false;
-            output = "";
-            outputResult = "";
-            var reqObject = new CheckVoucherRequest
+            var Serial = new SerialHelper(commName, 9600);
+
+            var responseData = Serial.SendAndRecieveData<ResponseCheckVoucher>(new CheckVoucherRequest()
             {
                 ReqId = requestId,
                 ReqTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"),
                 ReqData = new VoucherPayParams
                 {
-                    LstVoucher= lstVouchers,
+                    LstVoucher = lstVouchers,
                     VchProv = voucherProvider
                 }
-            };
+            });
 
-            string reqString = JsonConvert.SerializeObject(reqObject);
-            comPort.Write(reqString);
+            return JsonConvert.SerializeObject(responseData);
         }
 
         public void close()
